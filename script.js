@@ -22,10 +22,23 @@ function updateClock() {
     second: "2-digit",
   };
 
+   // Check if the timezone is valid
+   const isValidTimezone = (timezone) => {
+    try {
+      new Intl.DateTimeFormat('en-US', { timeZone: timezone });
+      return true;
+    } catch (e) {
+      return false;
+    }
+  };
+
+  const validTimezone = isValidTimezone(timezone) ? timezone : 'UTC'; // Fallback to UTC if invalid
+
   try {
     // Format date and time based on the selected timezone
-    const datePart = now.toLocaleDateString("en-US", optionsDate);
-    const timePart = now.toLocaleTimeString("en-US", optionsTime);
+    
+    const datePart = now.toLocaleDateString("en-US", { timeZone: validTimezone, optionsDate });
+    const timePart = now.toLocaleTimeString("en-US", { timeZone: validTimezone, optionsTime });
 
     // Display the formatted date and time in the element
     document.getElementById("current-time").textContent = `${datePart} - ${timePart}`;
